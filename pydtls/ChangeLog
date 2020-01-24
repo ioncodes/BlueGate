@@ -1,0 +1,259 @@
+2017-04-27  Ray Brown  <code@liquibits.com>
+
+	Release 1.2.3
+
+	* dtls/wrapper.py: Add optional parameter to DtlsSocket: client_timeout (seconds). If client_timeout is specified, clients that have not communicated within the time frame will be dropped.
+	* setup.py: Version incremented to 1.2.3
+	* dtls/__init__.py: Increment version
+
+2017-04-10  Ray Brown  <code@liquibits.com>
+
+	Release 1.2.2
+
+	Produce a Pure Python Wheel instead of a source distribution for Linux. This speeds up installation and simplifies distribution building.
+
+	* setup.py: Drop support for sdist; add support for bdist_wheel without --plat-name switch; persist README.rst; increment version
+	* dtls/__init__.py: Increment version
+
+2017-04-06  Ray Brown  <code@liquibits.com>
+
+	Installation Fixes and Improvements
+
+	Installation as well as distribution generation are now simplified. With the elimination of MinGW support there is now a unique set of platform binaries for 32-bit and 64-bit Windows. Pip will now automatically choose the proper binary wheel or the source distribution, depending under which platform and Python version it is being invoked.
+
+	* README.md: add installation section
+	* setup.py: rewrite to use bdist_wheel for Windows
+
+2017-04-03  Ray Brown  <ray@Virtor10>
+
+	Release 1.2.0
+
+	* README.md: Release updates
+
+2017-04-02  Ray Brown  <code@liquibits.com>
+
+	Release 1.2.0 Preparation
+
+	* README.txt -> README.md: renamed
+	* dtls/sslconnection.py: Reduce the default MTU in effect while handshaking to 576, suitable for various path MTUs and PPPoE
+	* dtls/prebuilt/win32-x86[_64]: Rebuilt with Visual C++ 2008 to eliminate requirement to install a C++ redistributable package
+	* dtls/prebuilt/mingw-x86: mingw support is deprecated
+	* dtls/__init__.py: VERSION introduced
+	* setup.py: Version incremented to 1.2.0
+
+2017-03-28  Björn Freise  <mcfreis@gmx.net>
+
+	Workaround for Windows concerning the MTU size
+
+	* dtls/sslconnection.py: Hardcoded setting of the MTU size only for Windows and in case it is not already configured
+	* dtls/test/unit_wrapper.py: No user config of the MTU size; using the hardcoded one from SSLConnection
+
+2017-03-28  Björn Freise  <mcfreis@gmx.net>
+
+	Minor fixes and "hopefully" compatible to Ubuntu 16.04
+
+	* dtls/__init__.py: Removed wrapper import
+	* dtls/openssl.py: Fixed line endings to LF
+	* dtls/patch.py: Removed PROTOCOL_SSLv3 import and fixed line endings to LF
+	* dtls/sslconnection.py: Fixed line endings to LF
+	* dtls/test/certs/*_ec.pem: Fixed line endings to LF
+	* dtls/test/echo_seq.py: Fixed line endings to LF
+	* dtls/test/simple_client.py: Fixed line endings to LF
+	* dtls/test/unit.py: Fixed line endings to LF
+	* dtls/test/unit_wrapper.py: Corrected wrapper import and fixed line endings to LF
+	* dtls/util.py: Fixed line endings to LF
+	* dtls/wrapper.py: Corrected function naming to wrap_client() and wrap_server(); Fixed line endings to LF
+	* dtls/x509.py: Fixed line endings to LF
+
+2017-03-23  Björn Freise  <mcfreis@gmx.net>
+
+	Patched ssl-Module with SSL_BUILD_*- and ERR_*- constants and added aliases for wrap_server() and wrap_client()
+
+	* dtls/__init__.py: Added DtlsSocket() from wrapper and aliases for wrap_server() and wrap_client()
+	* dtls/err.py: Added patch_ssl_errors() to patch ssl-Module with ERR_* constants
+	* dtls/patch.py: Patched ssl-Module with SSL_BUILD_* constants and added call to patch_ssl_errors()
+	* dtls/wrapper.py:
+	    - Added a server and client function to alias/wrap DtlsSocket() creation
+	    - Cleanup of DtlsSocket.__init__()
+	    - Cleanup of exception handling in all member methods
+	    - Cleanup sendto() from client: no endless loop and first do a connect if not already connected
+	* dtls/test/unit_wrapper.py: Adopt the changes made described above
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Added a wrapper for a DTLS-Socket either as client or server - including unit tests
+
+	* dtls/__init__.py: Import SSLContext() and SSL() for external use
+	* dtls/wrapper.py: Added class DtlsSocket() to be used as client or server
+	* dtls/test/unit_wrapper.py: unit test for DtlsSocket()
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Added more on error evaluation and a method to get the peer certificate chain
+
+	* dtls/__init__.py: import error codes from err.py as error_codes for external access
+	* dtls/err.py: Added errors for ERR_WRONG_SSL_VERSION, ERR_CERTIFICATE_VERIFY_FAILED, ERR_NO_SHARED_CIPHER and ERR_SSL_HANDSHAKE_FAILURE
+	* dtls/openssl.py:
+		- Added constant SSL_BUILD_CHAIN_FLAG_NONE for SSL_CTX_build_cert_chain()
+		- Added method SSL_get_peer_cert_chain()
+	* dtls/patch.py: Added getpeercertchain() as method to ssl.SSLSocket()
+	* dtls/sslconnection.py:
+		- Bugfix SSLContext.set_ecdh_curve() returns 1 for success and 0 for failure
+		- SSLContext.build_cert_chain() changed default flags to SSL_BUILD_CHAIN_FLAG_NONE
+		- In SSLConnection() the mtu size gets only set if no user config function is given
+		- SSLConnection.listen() raises an exception for ERR_WRONG_VERSION_NUMBER, ERR_COOKIE_MISMATCH, ERR_NO_SHARED_CIPHER and all other unknown errors
+		- SSLConnection.read() and write() now can also raise ERR_PORT_UNREACHABLE
+		- If SSLConnection.write() successfully writes bytes to the peer, then the handshake is assumed to be okay
+		- Added method SSLConnection.getpeercertchain()
+	* dtls/test/unit.py: ThreadedEchoServer() with an extra exception branch for the newly raised exceptions in SSLConnection.listen()
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Added certificate creation using ECDSA
+
+	* dtls/test/makecerts_ec.bat: creates ca-cert_ec.pem, keycert_ec.pem and server-cert_ec.pem
+	* dtls/test/openssl_ca.cnf and openssl_server.cnf: Added HOME to be able to use the conf file under windows
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Added an interface in SSLConnection() to access SSLContext() and SSL() for manipulating settings during creation
+
+	* dtls/openssl.py:
+		- Added utility functions EC_curve_nist2nid() and EC_curve_nid2nist()
+	* dtls/patch.py:
+		- Extended wrap_socket() arguments with callbacks for user config functions of ssl context and ssl session values
+		- Extended SSLSocket() arguments with callbacks for user config functions of ssl context and ssl session values
+	* dtls/sslconnection.py:
+		- Extended SSLConnection() arguments with callbacks for user config functions of ssl context and ssl session values
+		- During the init of client and server the corresponding user config functions are called (if given)
+		- Added new classes SSLContext() [set_ciphers(), set_sigalgs(), set_curves(), set_ecdh_curve(), build_cert_chain(),
+		set_ssl_logging()] and SSL() [set_mtu(), set_link_mtu()]
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Added methods getting the curves supported by the runtime openSSL lib
+
+	* dtls/openssl.py:
+		- Added class _EllipticCurve() for easy handling of the builtin curves
+		- Added wrapper get_elliptic_curves() - which uses _EllipticCurve()
+		- Added EC_get_builtin_curves(), EC_KEY_new_by_curve_name() and EC_KEY_free()
+		- Added OBJ_nid2sn() for translating numeric ids to names
+	* dtls/util.py: Added _EC_KEY() derived from _Rsrc() with own free/del method
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Added methods for setting and getting the curves used during negotiation and encryption
+
+	* dtls/openssl.py:
+		- Added SSL_CTX_set1_curves() and SSL_CTX_set1_curves_list()
+		- Added SSL_CTX_set_ecdh_auto() and SSL_CTX_set_tmp_ecdh()
+		- Added SSL_get1_curves(), SSL_get_shared_curve(), SSL_set1_curves() and SSL_set1_curves_list()
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Added methods for setting the signature algorithms
+
+	* dtls/openssl.py:
+		- Added SSL_CTX_set1_client_sigalgs_list(), SSL_CTX_set1_client_sigalgs(), SSL_CTX_set1_sigalgs_list() and SSL_CTX_set1_sigalgs()
+		- Added SSL_set1_client_sigalgs_list(), SSL_set1_client_sigalgs(), SSL_set1_sigalgs_list() and SSL_set1_sigalgs()
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Added method SSL_CTX_build_cert_chain()
+
+	* dtls/openssl.py: Added SSL_CTX_build_cert_chain() and corresponding constants
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Added methods *_clear_options() and *_get_options()
+
+	* dtls/openssl.py:
+		- Added SSL_CTX_clear_options() and SSL_CTX_get_options()
+		- Added SSL_clear_options() and SSL_get_options()
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Added new methods for DTLSv1.2
+
+	* dtls/err.py: Added error code ERR_WRONG_VERSION_NUMBER
+	* dtls/openssl.py: Added DTLS_server_method(), DTLSv1_2_server_method() and DTLSv1_2_client_method()
+	* dtls/patch.py: Default protocol DTLS for ssl.wrap_socket() and ssl.SSLSocket()
+	* dtls/sslconnection.py:
+		- Introduced PROTOCOL_DTLSv1_2 and PROTOCOL_DTLS (the latter one is a synonym for the "higher" version)
+		- Updated _init_client() and _init_server() with the new protocol methods
+		- Default protocol DTLS for SSLConnection()
+		- Return on ERR_WRONG_VERSION_NUMBER if client and server cannot agree on protocol version
+	* dtls/test/unit.py:
+		- Extended test_get_server_certificate() to iterate over the different protocol combinations
+		- Extended test_protocol_dtlsv1() to try the different protocol combinations between client and server
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Updating openSSL libs to v1.0.2l-dev
+
+	* dtls/openssl.py: Added mtu-functions SSL_set_mtu() and DTLS_set_link_mtu()
+	* dtls/prebuilt/win32-*: Updated libs for x86 and x86_64 to version 1.0.2l-dev
+	* dtls/sslconnection.py: mtu size set hardcoded to 1500 - otherwise the windows implementation has problems
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Added interface for SSL_CTX_set_info_callback()
+
+	* dtls/openssl.py:
+		- Added methods SSL_CTX_set_info_callback(), SSL_state_string_long(), SSL_alert_type_string_long() and SSL_alert_desc_string_long()
+		- Added constants for state and error evaluation during callback
+	* dtls/sslconnection.py: Added _ssl_logging_cb() as default callback function - only outputs messages when logger is active
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	SSL_write() extended to handle ctypes.Array as data
+
+	* dtls/openssl.py: SSL_write() can handle ctypes.Array data
+	* dtls/sslconnection.py: Added missing import ERR_BOTH_KEY_CERT_FILES
+	* dtls/test/simple_client.py: Added basic test client to use with dtls/test/echo_seq.py
+
+2017-03-17  Björn Freise  <mcfreis@gmx.net>
+
+	Beautified lists and maps, grouped imports for easy merges in the future - no changed functionality!
+
+	* dtls/openssl.py:
+		- Ordered constants according to header file from openSSL
+		- Beautified __all__-list and map for _make_function() in order to easy merges in the future
+		- Added a few returns in order to evaluate the success of the called methods
+	* dtls/patch.py: Grouped imports in the following order - system, local
+	* dtls/sslconnection.py: ssl protocol not hardcoded anymore for forked objects
+	* dtls/x509.py: logger messages working again
+
+2017-02-27  Ray Brown  <code@liquibits.com>
+
+	* dtls/openssl.py: support reading directly into given buffer instead of forcing buffer copy (for ssl module compatibility)
+	* dtls/sslconnection.py: in-situ receive support, as above
+	* dtls/patch.py: various changes for compatibility with the ssl module of Python 2.7.12; note that the ssl module's new SSLContext is not supported
+	* dtls/test/unit.py: changes to support the updated ssl module, including fix of deprecation warnings
+	* setup.py: increase version to 1.0.2
+
+2014-01-18  Ray Brown  <code@liquibits.com>
+
+	* setup.py: Increase version to 1.0.1 for release to PyPI
+
+2014-01-18  Jayson Vantuyl  <kagato@souja.net>
+
+	* sslconnection.py: fix missing error code import
+
+2014-01-18  Ray Brown  <code@liquibits.com>
+
+	* setup.py: First stable version, 1.0.0
+	* dtls/test/makecerts: Generate valid and current certificates for
+	unit test suite
+	* dtls/test/openssl_ca.cnf: Configuration file for CA certificate
+	* dtls/test/openssl_server.cnf: Configuration file for server
+	certificate
+	* dtls/test/certs/ca-cert.pem: updated certificate, valid for 10 years
+	* dtls/test/certs/server-cert.pem: updated certificate, valid for
+	10 years
+	* dtls/test/certs/keycert.pem: updated server certificate from server-cert.pem, along with that certificate's private key
+	* dtls/test/server-key.pem: deleted (it was not needed)
+
+2012-12-31  Ray Brown  <code@liquibits.com>
+
+	* All: Version 0.1.0: initial public release
