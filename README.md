@@ -2,6 +2,7 @@
 PoC for the Remote Desktop Gateway vulnerability - CVE-2020-0609 &amp; CVE-2020-0610. Thanks to [ollypwn](https://twitter.com/ollypwn) for pointing out my silly mistake!
 
 ## Setup
+I'm using a patched version of `pydtls` as the original repository wouldn't build properly.
 ```
 cd pydtls
 sudo python setup.py install
