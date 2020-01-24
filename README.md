@@ -17,5 +17,7 @@ python dos.py 192.168.8.133 3391
 
 ### Result
 Before:
+![before](https://github.com/ioncodes/BlueGate/blob/master/images/before_dos.png?raw=true)
 
 After:
+![before](https://github.com/ioncodes/BlueGate/blob/master/images/after_dos.png?raw=true)
