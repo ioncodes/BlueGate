@@ -2,7 +2,7 @@
 PoC for the Remote Desktop Gateway vulnerability - CVE-2020-0609 &amp; CVE-2020-0610. Thanks to [ollypwn](https://twitter.com/ollypwn) for pointing out my silly mistake!
 
 ## Denial of Service
-A PoC for the DoS attack can be found in [dos.py](https://github.com/ioncodes/BlueGate/blob/master/dos.py). You can use it as follows:  
+A PoC for the DoS attack can be found in [dos.py](https://github.com/ioncodes/BlueGate/blob/master/dos.py).
 
 ### Setup
 ```
