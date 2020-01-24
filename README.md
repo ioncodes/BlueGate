@@ -1,14 +1,14 @@
 # BlueGate
 PoC for the Remote Desktop Gateway vulnerability - CVE-2020-0609 &amp; CVE-2020-0610. Thanks to [ollypwn](https://twitter.com/ollypwn) for pointing out my silly mistake!
 
-## Denial of Service
-A PoC for the DoS attack can be found in [dos.py](https://github.com/ioncodes/BlueGate/blob/master/dos.py). This essentially crashes the Remote Desktop Gateway service. Initial PoC can be found [here](https://github.com/ioncodes/BlueGate/blob/91ad3951c0db0944a5f8ade8c4af1ae6bd69836e/dos.py).
-
-### Setup
+## Setup
 ```
 cd pydtls
 sudo python setup.py install
 ```
+
+## Denial of Service
+A PoC for the DoS attack can be found in [dos.py](https://github.com/ioncodes/BlueGate/blob/master/dos.py). This essentially crashes the Remote Desktop Gateway service. Initial PoC can be found [here](https://github.com/ioncodes/BlueGate/blob/91ad3951c0db0944a5f8ade8c4af1ae6bd69836e/dos.py).
 
 ### Usage
 ```
