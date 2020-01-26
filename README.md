@@ -22,3 +22,15 @@ Before:
 
 After:
 ![after](https://github.com/ioncodes/BlueGate/blob/master/images/after_dos.png?raw=true)
+
+
+## Scanner
+A scanner that is able to determin whether the target is vulnerable or not. The script can be found in [check.py](https://github.com/ioncodes/BlueGate/blob/master/check.py). The timeout is set to 3 seconds by default but can be adjusted in the source code.
+
+### Usage
+```
+python check.py 192.168.8.134 3391
+```
+
+### Result
+It says either `Vulnerable!` or `Not vulnerable!`.
