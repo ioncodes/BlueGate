@@ -31,7 +31,7 @@ def check(host, port):
     vulnerable = False
     try:
         response = sock.recv(16)[-4:]
-        value = struct.unpack('<L', response)[0]
+        value = struct.unpack("<L", response)[0]
         vulnerable = value != 0x8000ffff
     except:
         vulnerable = True
